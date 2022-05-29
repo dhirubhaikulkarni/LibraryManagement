@@ -1,0 +1,501 @@
+﻿@*@model MVCTest.DAL.Books*@
+
+@*@model IEnumerable<MVCTest.Models.BooksViewModel>*@
+
+@*@model IEnumerable<MVCTest.DAL.Books>*@
+
+@model MVCTest.Models.BooksViewModel
+
+@{
+    Layout = Layout;
+}
+
+@*@Html.Partial("Partial", Model)*@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SearchBook1</title>
+
+    <style>
+        .main {
+            display: flex;
+            margin: 4rem;
+        }
+
+
+        .sub_main {
+            padding-right: 40px;
+        }
+
+        h1 {
+            background-color: #F5F5DC;
+            padding: 10px;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 600;
+        }
+
+        #form_main{
+             display: flex;
+            margin: 4rem;
+        
+        
+        }
+
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            text-align: center;
+            background-color:aqua;
+            box-sizing: border-box;
+            padding: 10px;
+            z-index: 100;
+            display: none;
+           
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            background-color: black;
+            color: white;
+            border-radius: 50%;
+            padding: 4px;
+        }
+
+        /*#main_id{
+            border: solid black 1px;
+            background-color: aquamarine;
+        }
+
+
+        .sub_main-btn{
+            display:flex;
+            margin-right:10px;
+
+        }
+
+        .sub_main-btn input{
+        margin-right:10px;
+        margin-left:10px;
+        }
+
+
+        /*.Pager ul {
+            list-style-type: none;
+            text-align: center;
+            display: flex;
+        }
+
+        .Pager li {
+            background-color: white;
+            color: black;
+            border: 2px solid #4CAF50;
+            padding: 10px;
+            margin: 5px;
+            margin-left: 20px;
+        }
+
+        #li1 {
+            background-color: aquamarine;
+            color: #333;
+        }*/
+    
+    </style>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <script>
+            $(document).ready(function ()
+            {
+                
+                $(document).on("click", "#PageLinkP", function ()
+                {
+                    var pagenumber = $("#PageNumber").val();
+                    $("#PageNumber").val(parseInt(pagenumber) - 1);
+                    BtnClick();
+                });
+
+                $(document).on("click", "#PageLink", function ()
+                {
+                    var pagenumber = $(this).text();
+                    $("#PageNumber").val(pagenumber);
+                    BtnClick();
+                });
+
+                $(document).on("click", "#PageLinkN", function ()
+                {
+                    var pagenumber = $("#PageNumber").val();
+                    $("#PageNumber").val( parseInt( pagenumber) +1);
+                    //$("#PageNumber").val( ++pagenumber);
+                    BtnClick();
+                });
+
+                //$("#BookName").change(function () {
+                //    $("#PageNumber").val(1);
+                //    var SelectBookName = $("#BookName").val();
+                //    BtnClick();
+                //});
+
+                $("#PageSize").change(function () {
+                    $("#PageNumber").val(1);
+                   // var SelectPageSize = $("#PageSize").val();
+                    BtnClick();
+                });
+
+                //$("#BookCategoryId").change(function () {
+                //    $("#PageNumber").val(1);
+                //    //var SelectCategoryType = $("#BookCategoryId").val();
+                //    BtnClick();
+                //});
+
+                //$("#PublisherId").change(function () {
+                //    $("#PageNumber").val(1);
+                //    //var SelectPublisherName = $("#PublisherId").val();
+                //    BtnClick();
+                //});
+
+                BtnClick();
+               
+            })
+
+            //var pageNo = parseInt($(this).html());
+            //$(document).on("click", "#btnPageNo", function () {
+            //    $("#PageNumber").val($(this).val());
+            //    BtnClick();
+            //})
+            
+           function BtnClick() {
+                //var BookViewModel =
+                //{
+                //};
+                //BookViewModel.BookName = $("#BookName").val();
+                //BookViewModel.PageNumber = $("#PageNumber").val();
+                //BookViewModel.PageSize = $("#PageSize").val();
+                //BookViewModel.BookCategoryId = $("#BookCategoryId").val();
+                //BookViewModel.PublisheId = $("#PublisherId").val();
+
+                $.ajax({
+                    url: "/Books/Index",
+                    type: "POST",
+                    //Using Form Passing
+                    data: $("#JesonSearchForm").serialize() ,
+                    //dataType: 'json',
+                    //Using Parameter Passing
+                    //data: { model: BookViewModel },
+                    success: function (data)
+                    {
+                        debugger;
+                        $("#booktbl").html(data);
+                        //$('#pagediv').html(strPage);
+                        ////var strtable = "<table><tr><th>BookId</th><th>Book Name</th><th>CategoryType</th><th>PublisherName</th><th>Quantity</th></tr>";
+                        ////$.each(data.booklist, function (i, v1) {
+                        ////    strtable += "<tr><td>" + v1.BookId + "</td><td>" + v1.BookName + "</td><td>" + v1.CategoryType + "</td><td>" + v1.PublisherName + "</td><td>" + v1.Quantity + "</td></tr>";
+                        ////});
+
+                        ////strtable += "</table>";
+                        ////$('#booktbl').html(strtable);
+
+                        //var lastpage = data.TotalPages;
+                        //var CurrentPage = data.PageNumber;
+                        //var strPage = "<ul>";
+                        //if (CurrentPage > 1)
+                        //{
+                        //     strPage += "<li><a id='PageLinkP'  href='#'>Previous</a></li>";
+                        //}
+                        //for (i = 1; i <= data.TotalPages; i++) {
+                        //    if (i == CurrentPage) {
+                        //        strPage += '<li id="li1" ><a href="" id="PageLink" data-page=' + i + '>' + CurrentPage + '</a></li>';
+                        //    }
+                        //    else {
+                        //        strPage += "<li><a id='PageLink'  href='#'>" + i + "</a></li>";
+                        //    }
+                        //}
+                        //if (CurrentPage != data.TotalPages) {
+                        //    strPage += "<li><a id='PageLinkN'  href='#'>Next</a></li>";
+                        //}
+                        //strPage += "</ul>";
+                        //$('#pagediv').html(strPage);
+
+                        //var PagingMessage = "";
+                        //var FromValue;
+                        //var pagesize = data.PageSize;
+                        //var pagenumbers = data.PageNumber;
+                        //var totalrecords = data.count;
+                        //var ToValue;
+                        //var ToValueTemp = data.PageNumber * data.PageSize;
+                        //var ToValueTemp = ((pagesize * (pagenumbers - 1) + 1) - 1 + pagesize);
+                        //var PageSize = data.PageSize;
+                        //var showTo;
+                        //if (data.PageNumber == 1)
+                        //{
+                        //    FromValue = "1";
+                        //}
+                        //else
+                        //{
+                        //    FromValue = (pagesize * (pagenumbers - 1)) + 1;
+                        //}
+                        //if (ToValueTemp > totalrecords) {
+                        //    ToValue = totalrecords;
+                        //}
+                        //else {
+                        //    ToValue = ToValueTemp;
+                        //}
+                        //PagingMessage = "<label>Showing Records " + FromValue + "-" + ToValue + " of Total Records " + totalrecords + ".</label>";
+                        //$('#PagingMessageShow').html(PagingMessage);
+
+                        ////var PagingMessage = "";
+                        ////PagingMessage = "<label>Page No " + data.PageSize + " of " + data.TotalPages + "</label>";
+                        ////$('#PagingMessageShow').html(PagingMessage);
+
+                        ////var strPage = "";
+                        ////for (var i = 1; i <= data.TotalPages; i++) {
+                        ////    strPage += "<input type='button' class = 'Pagination' id='btnPageNo' value='" + i + "' />";
+                        ////}
+                        ////$('#pagediv').html(strPage);
+                    },
+                });
+           }
+           //function BtnEditClick() {
+           //    var Id = this.id;
+           //    $.ajax({
+           //        url: "/Books/Insertdata",
+           //        type: "GET",
+           //        //Using Form Passing
+           //        //data: $("#JesonSearchForm").serialize(),
+           //        data: { "BookId": id },
+           //        //dataType: 'json',
+           //        //Using Parameter Passing
+           //        //data: { model: BookViewModel },
+           //        success: function (data) {       
+           //            //$('#myModalContent').html(data);
+           //            //$('#popupModel').modal('show');
+           //            //$("#booktbl").html(data);
+           //        },
+           //    });
+           //}
+           //debugger;
+
+           $(document).on("click", ".EditBook", function () {
+               var Id = $(this).data('id');
+               //var Id = this.id;
+               $.ajax({
+                   url: "/Books/Insertdata",
+                   type: "GET",
+                   data: { Id : Id },
+                   success: function (data) {
+                       $("#InsertBookId").val(data.BookId);
+                       $("#InsertBookName").val(data.BookName);
+                       $("#InsertQuantity").val(data.Quantity);
+                       $("#InsertBookCategoryId").val(data.BookCategoryId);
+                       $("#InsertPublisherId").val(data.PublisherId);
+                       if (data.IsActive == true)
+                       {
+                           $("#InsertIsActive").prop("checked", true);
+                       }
+                       else
+                       {
+                           $("#InsertIsActive").prop("checked", false);
+                       }
+                       $("#popupModel").modal('show');
+                       
+                   },
+               });
+           });
+
+
+           function BtnSaveClick() {
+                $.ajax({
+                   url: "/Books/Insertdata",
+                   type: "POST",
+                   //Using Form Passing
+                   data: $("#InsertBookDataForm").serialize(),
+                   //dataType: 'json',
+                   //Using Parameter Passing
+                   //data: { model: BookViewModel },
+                   success: function (data) {
+                       debugger;
+                       BtnClick();
+                       $("#popupModel").modal('hide');
+                       alert("Book add Sucessfuly");
+                   },
+               });
+           }
+
+           // Function to show and hide the popup
+           function showmodal()
+           {
+               $("#popupModel").modal('show');
+           }
+
+           function Hide() {
+               $("#popupModel").modal('hide');
+           }
+    </script>
+</head>
+<body>
+    <div class="col-lg-12"><h1> Search Panel</h1> </div>
+    @using (@Html.BeginForm("Index", "Books", FormMethod.Post, new { @id = "JesonSearchForm" }))
+    {
+
+        <div class="main">
+            <div class="sub_main">
+                @*<label for="exampleFormControlInput1">BookId</label>*@
+                @Html.HiddenFor(m => m.BookId)
+            </div>
+
+            <div class="sub_main">
+                <label for="exampleFormControlInput1">Book Name</label>
+                @*@Html.TextBoxFor(m => m.BookName, "Enter BookName")*@
+                @Html.TextBoxFor(m => m.BookName, new { @placeholder = "Please Enter Name" })
+            </div>
+
+            @*using dropdown list slect page number code*@
+            @*<div class="sub_main">
+                    <label for="exampleFormControlInput2">Page Number</label>
+                    @Html.TextBoxFor(m => m.PageNumber, new { @type = "number", placeholder = "Enter Page Number" })
+                </div>*@
+
+            <div class="sub_main">
+                @Html.HiddenFor(m => m.PageNumber)
+            </div>
+
+            @*using dropdown list select page size code*@
+            <div class="sub_main">
+                <label for="exampleFormControlSelect3">Page Size</label>
+                @Html.DropDownListFor(m => m.PageSize, new SelectList(Model.PageSizeList))
+            </div>
+            <div class="sub_main">
+                <label for="exampleFormControlSelect1">Category Type</label>
+                @*@Html.DropDownListFor(m => m.BookCategoryId, new SelectList(Model.categorylist, "BookCategoryId", "CategoryType"), new { @multiple = "multiple", @placeholder = "Please select country", @class = "ddlMultiSlectBox" })*@
+               
+                @Html.DropDownListFor(m => m.BookCategoryId, new MultiSelectList(Model.categorylist, "BookCategoryId", "CategoryType"), "Select Category")
+            </div>
+            <div class="sub_main">
+                <label for="exampleFormControlSelect2">Publihser Name</label>
+                @Html.DropDownListFor(m => m.PublisherId, new SelectList(Model.publisherlist, "PublisherId", "PublisherName"), "Select Publisher")
+            </div>
+
+        </div>
+
+        <div class="main">
+                <div class="sub_main">
+                    <input type="button" id="search" name="search" value="Search" class="btn btn-outline-info" onclick="BtnClick()" />
+                </div>
+
+                <div class="sub_main">
+                    <input type="button" id="Add" name="Add" value="Add" class="btn btn-outline-info" onclick="@("window.location.href='" + @Url.Action("Insertdata", "Books",new { Id=0 })+"'")" />
+                </div>
+                <div class="sub_main">
+                    <input type="button" id="btnShowModal" name="AddUsingModal" value="AddUsingModal" class="btn btn-outline-info" onclick="showmodal()" />
+                </div>
+
+                <div class="sub_main">
+                    <input type="reset" value="Reset" class="btn btn-outline-info" id="btnClear" />
+                </div>
+            </div>
+
+    }
+
+    <div class="col-12">
+        <div class="col-2">
+        </div>
+        <div class="col-8" id="booktbl">
+            <table id="booktbl1" class="table table-hover" border="1"></table>
+            <div id="PagingMessageShow">
+            </div>
+
+            <div id="Partial">
+            </div>
+
+            <div id="pagediv" class="Pager">
+            </div>
+
+        </div>
+    </div>
+
+    
+   
+    <div id="popupModel" class="modal fade" role="dialog" style="height:100%; width:100%; ">
+        <div class="modal-dialog" style="height:auto; width:auto; ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add or Edit Book Details.</h3>
+                    <button type="button" class="close" data-dismiss="modal" onclick="Hide()">×</button>
+                </div>
+                <div id='myModalContent' style="padding:150px;">
+                    <div>
+                        <div class="col-lg-12" id="form_main">
+                            @using (@Html.BeginForm("Insertdata", "Books", FormMethod.Post, new { @id = "InsertBookDataForm" }))
+                            {
+
+                                <div class="main col-lg-12" id="main_id">
+                                    <div class="sub_main">
+                                        @*<label for="exampleFormControlInput1">BookId</label>*@
+                                        @Html.HiddenFor(m => m.BookId, new { @id = "InsertBookId" })
+
+                                    </div>
+                                    <div class="sub_main">
+                                        <label for="exampleFormControlInput1">Book Name</label>
+
+                                        @Html.TextBoxFor(m => m.BookName, new { @class = "form-control" , @id = "InsertBookName" })
+                                    </div>
+                                    <div class="sub_main">
+                                        <label for="exampleFormControlInput2">Quantity</label>
+
+                                        @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", @type = "number", placeholder = "Enter Page Number", @id = "InsertQuantity" })
+                                    </div>
+                                    <div class="sub_main">
+                                        <label for="exampleFormControlSelect1">Category Type</label>
+
+                                        @Html.DropDownListFor(m => m.BookCategoryId, new SelectList(Model.categorylist, "BookCategoryId", "CategoryType"), new { @class = "form-control", @id = "InsertBookCategoryId" })
+                                    </div>
+                                    <div class="sub_main">
+                                        <label for="exampleFormControlSelect2">Publihser Name</label>
+                                        @Html.DropDownListFor(m => m.PublisherId, new SelectList(Model.publisherlist, "PublisherId", "PublisherName"), new { @class = "form-control", @id = "InsertPublisherId" })
+                                    </div>
+                                    <div class="sub_main">
+                                        <label for="exampleFormControlSelect2">IsActive</label>
+                                        @Html.CheckBox("IsActive", new { @id = "InsertIsActive" })
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="sub_main-btn">
+                                        <input type="button" onclick="BtnSaveClick()"value="Save" class="btn btn-primary btn-lg success" />
+                                        <input type="button" id="Close" value="Close" class="btn btn-primary btn-lg active" onclick="Hide()" />
+                                        <input type="button" id="Cancel" name="Cancel" value="Cancel" class="btn btn-secondary btn-lg" onclick="Hide()" />
+                                        @*<input type="button" id="Cancel" name="Cancel" value="Cancel" class="btn btn-secondary btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Books")+"' " )" />*@
+                                    </div>
+                                    @*<div class="sub_main">
+                                            <input type="button" id="Cancel" name="Cancel" value="Cancel" class="btn btn-secondary btn-lg" onclick="@("window.location.href='" + @Url.Action("Insertdata", "Books") + "'");" />
+                                        </div>*@
+                                </div>
+                                <div>
+                                    @Html.ActionLink("Back to List", "Index")
+                                </div>
+                                <div class="col-lg-3"></div>
+                            }
+                        </div>
+                    </div>
+                    <br />
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+

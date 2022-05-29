@@ -1,0 +1,129 @@
+﻿@*@model MVCTest.DAL.Books*@
+
+@*@model IEnumerable<MVCTest.Models.BooksViewModel>*@
+
+@*@model IEnumerable<MVCTest.DAL.Books>*@
+
+@model MVCTest.Models.BooksViewModel
+
+@{
+    Layout = Layout;
+}
+<html>
+<head>
+    <style>
+        .Pager ul {
+            list-style-type: none;
+            text-align: center;
+            display: flex;
+        }
+
+        .Pager li {
+            background-color: white;
+            color: black;
+            border: 2px solid #4CAF50;
+            padding: 10px;
+            margin: 5px;
+            margin-left: 20px;
+        }
+
+        #li1 {
+            background-color: aquamarine;
+            color: #333;
+        }
+    </style>
+    <script>
+        
+    </script>
+</head>
+<body>
+    <table class="table table-bordered" @*style="background-color: skyblue;"*@>
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.BookId)</th>
+                <th>@Html.DisplayNameFor(m => m.BookName)</th>
+                <th>@Html.DisplayNameFor(m => m.CategoryType)</th>
+                <th>@Html.DisplayNameFor(m => m.PublisherName)</th>
+                <th>@Html.DisplayNameFor(m => m.Quantity)</th>
+                <th>@Html.DisplayNameFor(m => m.IsActive)</th>
+                <th></th>
+                <th></th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model.booklist)
+            {
+                <tr>
+                    <td>@book.BookId</td>
+                    <td>@book.BookName</td>
+                    <td>@book.CategoryType</td>
+                    <td>@book.PublisherName</td>
+                    <td>@book.Quantity</td>
+                    <td>@book.IsActive</td>
+                    <td>@Html.ActionLink("Edit", "Insertdata", new {Id = book.BookId})</td>
+                    @*<td><a class="EditBooks" onclick="togglePopup()" href="@Url.Action("Insertdata","Books", new {Id = book.BookId})"> EditUsingModal </a></td>*@
+                    @*<td>@Html.ActionLink("EditBooks", "Insertdata", new { Id = book.BookId }, new { @class = "EditBooks", })</td>*@
+                    @*<td><a id="EditBooks" class="EditBooks" href="#" onclick="BtnEditClick()"> EditUsingModal </a></td>*@
+                    <td><a href="" data-id="@book.BookId" data-toggle="modal" title="Details" class="EditBook">EditBook</a></td>
+                </tr>
+                
+            }
+        </tbody>
+    </table>
+   
+
+    <div id="PagingMessageShow">
+        @{int FromValue; var pagesize = Model.PageSize; var pagenumbers = Model.PageNumber; var totalrecords = Model.count; int ToValue;
+            var ToValueTemp = Model.PageNumber * Model.PageSize; }
+        @if (Model.PageNumber == 1)
+        {
+            FromValue = 1;
+        }
+        else
+        {
+            FromValue = (pagesize * (pagenumbers - 1)) + 1;
+        }
+
+        @if (ToValueTemp > totalrecords)
+        {
+            ToValue = totalrecords;
+        }
+        else
+        {
+            ToValue = ToValueTemp;
+        }
+        <label id="Records">Showing Records  @FromValue  - @ToValue   of Total Records   @totalrecords </label>
+    </div>
+
+    <div id="pagediv" class="Pager">
+        <ul>
+            @if (Model.PageNumber > 1)
+            {
+                <li><a id='PageLinkP' href='#'>Previous</a></li>
+            }
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == Model.PageNumber)
+                {
+                    <li id="li1"><a href="" id="PageLink"> @i </a></li>
+                }
+                else
+                {
+                    <li><a id='PageLink' href='#'>  @i </a></li>
+                }
+            }
+            @if (Model.PageNumber != Model.TotalPages)
+            {
+                <li><a id='PageLinkN' href='#'>Next</a></li>
+            }
+        </ul>
+    </div>
+    
+    
+    
+
+</body>
+</html>
+
+  
